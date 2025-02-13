@@ -1,0 +1,28 @@
+{
+  "name": "geodesy-innovent",
+  "version": "0.1.1",
+  "description": "This library finds the destination point for a given distance and initial bearing on an ellipsoidal model earth.",
+  "node-red": {
+    "nodes": {
+      "geodesy-innovent": "latlon-ellips-spherical.js",
+      "vincenty-innovent": "latlon-ellips-vincenty.js",
+      "bearing-innovent": "distance-bearing-vincenty.js",
+      "distance-innovent": "distance-spherical.js"
+    }
+  },
+  "scripts": {
+    "test": "test-node"
+  },
+  "keywords": [
+    "async",
+    "latlon",
+    "Spherical",
+    "Vincenty",
+    "Bearing"
+  ],
+  "author": "Sergio Vargas Villar",
+  "license": "ISC",
+  "dependencies": {
+    "geodesy": "file:node_modules/geodesy"
+  }
+}

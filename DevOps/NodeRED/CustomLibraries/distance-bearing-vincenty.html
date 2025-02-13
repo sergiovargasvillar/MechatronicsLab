@@ -1,0 +1,156 @@
+<script type="text/javascript">
+  RED.nodes.registerType('distance-bearing-vincenty', {
+    category: 'Innovent',
+    color: '#16A085',
+    defaults: {
+      name: { value: "" }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "icons/file.png",
+    label: function () {
+      return this.name || "Distance and Bearing Vincenty";
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="distance-bearing-vincenty">
+  <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="distance-bearing-vincenty">
+  <p>Returns the distance and final bearing to travel along a geodesic from initial point to the given point, using
+    Vincenty inverse solution.</p>
+  <h3>How to use</h3>
+  <span style="font-size:14px;line-height:107%;font-family:Consolas;color:#2F5597;">How to build your Input function node,
+    two geodesic points:</span>
+  <br>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#569CD6;">const</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#4FC1FF;">geodesicCoordinates</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;= {</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">init</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">: {</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; &nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lat</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#B5CEA8;">23.5837573754560</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; &nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lon</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#B5CEA8;">58.17920339020770</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; },</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">final</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">: {</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; &nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lat</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">&nbsp;msg</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">.</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">payload</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">[</span><span
+      style="font-size:14px;font-family:Consolas;color:#B5CEA8;">0</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">].</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lat</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; &nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lon</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">&nbsp;msg</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">.</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">payload</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">[</span><span
+      style="font-size:14px;font-family:Consolas;color:#B5CEA8;">0</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">].</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">long</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; },</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">};</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#9CDCFE;">msg</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">.</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">payload</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;=&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#4FC1FF;">geodesicCoordinates</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">;</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#C586C0;">return</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">msg</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">;</span></p>
+    <h3>Output</h3>
+    <p
+      style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'>
+      <span style="font-size:14px;line-height:107%;font-family:Consolas;color:#2F5597;">The output of message</span>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#9CDCFE;">msg</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;= {</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#9CDCFE;">_msgid</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#CE9178;">&apos;bfe158b22d3b0188&apos;</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#9CDCFE;">payload</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">: {</span><span
+          style="font-size:14px;font-family:Consolas;color:#9CDCFE;">bearing</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#B5CEA8;">356.3197085</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#9CDCFE;">distance</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#B5CEA8;">1.824</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">},&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#6A9955;">// distance in meters and final bearing.</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#9CDCFE;">topic</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#CE9178;">&apos;&apos;</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">};</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;</span></p>
+      </p>
+</script>

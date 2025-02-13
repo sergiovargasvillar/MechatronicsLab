@@ -1,0 +1,144 @@
+<script type="text/javascript">
+  RED.nodes.registerType('distance-spherical', {
+    category: 'Innovent',
+    color: '#16A085',
+    defaults: {
+      name: { value: "" }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "icons/file.png",
+    label: function () {
+      return this.name || "Distance Spherical";
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="distance-spherical">
+  <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="distance-spherical">
+  <p>Finds the distance for a given two points initial and final on an ellipsoidal model earth.</p>
+  <h3>How to use</h3>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;'>
+    <span style="font-size:14px;line-height:107%;font-family:Consolas;color:#2F5597;">How to build your Input function node, two geodesic points:</span>
+    <br>
+    <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'><span style="font-size:14px;font-family:Consolas;color:#569CD6;">const</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#4FC1FF;">geodesicCoordinates</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;= {</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">init</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">: {</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; &nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lat</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#B5CEA8;">23.583757375456</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; &nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lon</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#B5CEA8;">58.1792033902077</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; },</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">final</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">: {</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; &nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lat</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">&nbsp;msg</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">.</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">payload</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">[</span><span
+      style="font-size:14px;font-family:Consolas;color:#B5CEA8;">0</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">].</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lat</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; &nbsp;&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">lon</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">&nbsp;msg</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">.</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">payload</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">[</span><span
+      style="font-size:14px;font-family:Consolas;color:#B5CEA8;">0</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">].</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">long</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp; },</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">};</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#9CDCFE;">msg</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">.</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">payload</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;=&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#4FC1FF;">geodesicCoordinates</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">;</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;</span></p>
+  <p
+    style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+    <span style="font-size:14px;font-family:Consolas;color:#C586C0;">return</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;</span><span
+      style="font-size:14px;font-family:Consolas;color:#9CDCFE;">msg</span><span
+      style="font-size:14px;font-family:Consolas;color:#D4D4D4;">;</span></p>
+    <h3>Output</h3>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#9CDCFE;">msg</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;= {</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#9CDCFE;">_msgid</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#CE9178;">&apos;f0408e5401f4e12a&apos;</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#9CDCFE;">payload</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#B5CEA8;">0.4766322545375321</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#6A9955;">// Distance in meters</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#9CDCFE;">topic</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">:&nbsp;</span><span
+          style="font-size:14px;font-family:Consolas;color:#CE9178;">&apos;&apos;</span><span
+          style="font-size:14px;font-family:Consolas;color:#D4D4D4;">,</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">};</span></p>
+      <p
+        style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:14.25pt;font-size:15px;font-family:"Calibri",sans-serif;background:#1E1E1E;'>
+        <span style="font-size:14px;font-family:Consolas;color:#D4D4D4;">&nbsp;</span></p>
+</script>
