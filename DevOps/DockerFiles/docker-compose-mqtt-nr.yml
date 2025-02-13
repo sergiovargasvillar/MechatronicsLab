@@ -1,0 +1,30 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+
+  node-red:
+    image: nodered/node-red:latest
+    container_name: nodered
+    environment:
+      - TZ=Europe/London
+      - NODE_RED_UID=1000
+      - NODE_RED_GID=1000
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node-red-data:/data
+    user: "1000:1000"
+    restart: unless-stopped
+
+volumes:
+  node-red-data:
+    driver: local
