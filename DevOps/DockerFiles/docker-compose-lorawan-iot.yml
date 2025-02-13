@@ -1,0 +1,75 @@
+version: "3"
+services:
+  chirpstack:
+    image: chirpstack/chirpstack:4.0.2
+    command: -c /etc/chirpstack
+    restart: unless-stopped
+    volumes:
+      - ./chirpstack:/etc/chirpstack
+      - ./lorawan-devices:/opt/lorawan-devices
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRESQL_HOST=postgres
+      - MQTT_BROKER_HOST=host.docker.internal
+    ports:
+      - 81:8080
+    networks:
+      - default
+      - redis
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  postgres:
+    image: timescale/timescaledb:2.8.0-pg14
+    restart: unless-stopped
+    volumes:
+      - ./postgresql/initdb:/docker-entrypoint-initdb.d
+      - postgresqldata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=wWyioXI6yZDaa7W
+    networks:
+      - default
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+    networks:
+      - redis
+
+  prometheus:
+    image: prom/prometheus:v2.38.0
+    restart: unless-stopped
+    volumes:
+      - prometheusdata:/prometheus
+      - ./prometheus:/etc/prometheus
+
+  grafana:
+    image: grafana/grafana-oss:9.1.5
+    restart: unless-stopped
+    environment:
+      - GF_PLUGINS_ENABLE_ALPHA=true
+    ports:
+      - 4001:3000
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./grafana-config/grafana.ini:/etc/grafana/grafana.ini
+  nodered:
+    image: nodered/node-red
+    ports:
+      - "1881:1880"
+    volumes:
+      - ./nodered-data:/data
+
+volumes:
+  postgresqldata:
+  redisdata:
+  prometheusdata:
+  grafanadata:
+
+networks:
+  redis:
