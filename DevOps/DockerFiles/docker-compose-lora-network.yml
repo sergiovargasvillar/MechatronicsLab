@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  nats:
+    image: nats:2.9.1
+    volumes:
+      - nats-jetstream:/jetstream
+      - ./nats/nats-server.conf:/nats-server.conf:z
+    ports:
+      - 1883:1883
+    restart: unless-stopped
+
+  chirpstack-gateway-bridge:
+    image: chirpstack/chirpstack-gateway-bridge:4.0.0
+    restart: unless-stopped
+    ports:
+      - 1700:1700/udp
+    volumes:
+      - ./chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
+    depends_on:
+      - nats
+
+volumes:
+  nats-jetstream:
