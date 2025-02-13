@@ -1,0 +1,24 @@
+FROM nodered/node-red:latest
+#ARG USER=root
+#ARG UID=0
+#ARG GID=0
+#USER ${UID}:${GID}
+
+# Copy package.json to the WORKDIR so npm builds all
+# of your added nodes modules for Node-RED
+
+COPY innovent-libs innovent-libs/
+COPY package.json .
+COPY loading.html /usr/src/node-red/
+RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production
+
+
+
+# You should add extra nodes via your package.json file but you can also add them here:
+#WORKDIR /usr/src/node-red
+#RUN npm install node-red-node-smooth
+
+# WORKDIR /data/
+# ENTRYPOINT [ "start.sh" ]
+RUN MAX_OLD_SPACE=${MAX_OLD_SPACE:='1024'}
+RUN cp loading.html node_modules/node-red-dashboard/dist/
