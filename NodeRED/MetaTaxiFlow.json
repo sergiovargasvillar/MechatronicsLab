@@ -1,0 +1,753 @@
+[
+    {
+        "id": "dac58122fa51c0f9",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2d149f62a49487ac",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "13e662db2dbaec5c",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#00a1a8",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#00a1a8",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#00a1a8",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#00eaf4",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#00a1a8",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "032d35b13b65f00e",
+        "type": "ui_tab",
+        "name": "Meta TAXI",
+        "icon": "",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "8b7cf8bb209bd049",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "032d35b13b65f00e",
+        "order": 1,
+        "disp": false,
+        "width": 27,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "2275f9e0f63f72ef",
+        "type": "catch",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "scope": [
+            "0cb844c2b77a8c11",
+            "8e5834863a5ce3f8",
+            "7a8f60f272188608",
+            "935c4a77f1478fdd",
+            "58c35f8a836ff40e",
+            "e16c84250ae36a20",
+            "4e9e4286b7b60bfd",
+            "3c102a7701c0634e"
+        ],
+        "uncaught": false,
+        "x": 730,
+        "y": 180,
+        "wires": [
+            [
+                "6b80c76d7986005f"
+            ]
+        ]
+    },
+    {
+        "id": "6b80c76d7986005f",
+        "type": "function",
+        "z": "2d149f62a49487ac",
+        "name": "Handle internal server error",
+        "func": "msg.payload = msg.error\nmsg.statusCode = 502;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 180,
+        "wires": [
+            [
+                "df9ec211aac0b84a"
+            ]
+        ]
+    },
+    {
+        "id": "df9ec211aac0b84a",
+        "type": "http response",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1190,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e6ad8bc8598138dc",
+        "type": "inject",
+        "z": "2d149f62a49487ac",
+        "name": "Update CRON",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 340,
+        "wires": [
+            [
+                "22107ec34d00a628"
+            ]
+        ]
+    },
+    {
+        "id": "22107ec34d00a628",
+        "type": "function",
+        "z": "2d149f62a49487ac",
+        "name": "PROD Access Token",
+        "func": "//Get Global Body key parameters:\nvar TokenExpiry = global.get(\"TokenExpiry\");\n\nconst baseUrl = global.get('url');\nconst path = 'auth/login';\n//   requestToken();\n//   return msg;\n\nvar currentTime = Date.now();\nvar tokenTimestamp = new Date(TokenExpiry).getTime();\n\n const expireSeconds = (tokenTimestamp - currentTime)/1000;\n node.warn(TokenExpiry)\n if (TokenExpiry != 'Invalid Date') {\n   if (expireSeconds < 2700 ) {\n     var date = new Date(TokenExpiry).toLocaleString(\"en-US\", {\n       timeZone: \"America/Caracas\",\n     });\n     node.warn(\n       \"*** Bearer token expiry at: \" + date + \" KSA time. UPDATING the token to avoid expiration ***\");\n     requestToken();\n     return msg;\n\n   } else {\n     var TokDate = new Date(tokenTimestamp).toLocaleString(\"en-US\", { timeZone: \"Asia/Dubai\", });\n     var currDate = new Date(currentTime).toLocaleString(\"en-US\", { timeZone: \"Asia/Dubai\", });\n     node.warn(\" Skipping token update...... Current time: \"+currDate+\". Token expire: \"+TokDate);\n   }\n } else {\n   node.warn(\"*** Initializing Bearer Token refresh ***\");\n   requestToken();\n   return msg;\n }\n\nfunction requestToken() {\n\n    msg.url = baseUrl + path ;\n//     msg.headers = {\n//         \"Content-Type\": \"application/x-www-form-urlencoded\",\n//       //  \"Cookie\": \"fpc=\" + fpcCookie + \";\"+\"stsservicecookie=\" + stsServiceCookie+\";\"+ \"x-ms-gateway-slice=\" + xsliceCookie,\n//   };\n    msg.payload = {\n\t\"login\": \"diego\",\n\t\"password\": \".diego*#7\"\n};\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 340,
+        "wires": [
+            [
+                "ac5004830ad4d12c"
+            ]
+        ]
+    },
+    {
+        "id": "ac5004830ad4d12c",
+        "type": "http request",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "url": "",
+        "tls": "",
+        "x": 610,
+        "y": 340,
+        "wires": [
+            [
+                "6ca3ce83bc993bc2",
+                "f545faaf16ab08ad"
+            ]
+        ]
+    },
+    {
+        "id": "f545faaf16ab08ad",
+        "type": "function",
+        "z": "2d149f62a49487ac",
+        "name": "Get Token and expire time",
+        "func": "var date = new Date();\nvar token = msg.payload.token;\nvar expiry = parseInt(msg.payload.expires_in);\n\nglobal.set(\"BearerToken\", token);\n\ndate.setSeconds(date.getSeconds() + expiry);\nglobal.set(\"TokenExpiry\", date);\ndate = date.toLocaleString(\"en-US\", { timeZone: \"America/Caracas\" });\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "50796fc46bb56c69",
+        "type": "inject",
+        "z": "2d149f62a49487ac",
+        "name": "Initialize",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "ae34133ff4d661e0"
+            ]
+        ]
+    },
+    {
+        "id": "324293011dc82019",
+        "type": "comment",
+        "z": "2d149f62a49487ac",
+        "name": "Authentication Barer Token",
+        "info": "",
+        "x": 110,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "79f396ddcc523f8b",
+        "type": "debug",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "ae34133ff4d661e0",
+        "type": "function",
+        "z": "2d149f62a49487ac",
+        "name": "Global Variables",
+        "func": "//const url = 'https://stagingserver.metas.uno:8081/api/';\nconst url = \"https://cjserver.metas.uno:8081/api/\"\nglobal.set(\"url\", url);\n\nvar date = new Date();\n\ndate.setSeconds(date.getSeconds() - 2700);\nglobal.set(\"TokenExpiry\", date);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 120,
+        "wires": [
+            [
+                "79f396ddcc523f8b"
+            ]
+        ]
+    },
+    {
+        "id": "6ca3ce83bc993bc2",
+        "type": "debug",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "9b60a57272d8747b",
+        "type": "function",
+        "z": "2d149f62a49487ac",
+        "name": "Get Taxi list",
+        "func": "\nconst token = global.get(\"BearerToken\");\nconst baseUrl = global.get('url');\nconst path = \"taxi/getTaxiLocations\";\nconst item = msg.payload;\nsendItem();\nmsg.item = msg.payload;\n\nreturn msg;\n\nfunction sendItem() {\n    var currentDate = new Date().toISOString(); //2022-08-16T16:46:05.479Z\n    msg.url = baseUrl + path;\n    msg.headers = {\n    //    \"If-None-Match\": \"null\",\n   //     \"OData-Version\": \"4.0\",\n        \"Content-Type\": \"application/json\",\n  //      \"Accept\": \"application/json\",\n//        \"OData-MaxVersion\": \"4.0\",\n        \"Authorization\": \"Bearer \" + token\n    };\n    // msg.payload = {\n    //     \"dataAreaId\": \"uae\",\n    //     \"PurchId\": item.po_number,\n    //     \"InvoiceNum\": item.invoice_number,\n    //     \"LineNumber\": parseInt(item.line_number),\n    //     \"QtyReceived\": parseInt(item.quantity),\n    //     \"ProductReceiptDate\": currentDate,\n    //     \"Unit\": item.unit,\n    //     \"BarCode\": \"\",\n    //     \"UserId\": \"\",\n    //     \"ItemNumber\": item.item_number\n    // };\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 460,
+        "wires": [
+            [
+                "f239d2a9af11b20e"
+            ]
+        ]
+    },
+    {
+        "id": "f239d2a9af11b20e",
+        "type": "http request",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 590,
+        "y": 460,
+        "wires": [
+            [
+                "8a22415468136c64",
+                "67fe4482456de349"
+            ]
+        ]
+    },
+    {
+        "id": "c30a5c93eea9cabc",
+        "type": "inject",
+        "z": "2d149f62a49487ac",
+        "name": "Update CRON",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 460,
+        "wires": [
+            [
+                "9b60a57272d8747b"
+            ]
+        ]
+    },
+    {
+        "id": "47ad689584ac986f",
+        "type": "ui_worldmap",
+        "z": "2d149f62a49487ac",
+        "group": "8b7cf8bb209bd049",
+        "order": 1,
+        "width": "27",
+        "height": "15",
+        "name": "",
+        "lat": "",
+        "lon": "",
+        "zoom": "",
+        "layer": "OSMC",
+        "cluster": "14",
+        "maxage": "",
+        "usermenu": "hide",
+        "layers": "hide",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "true",
+        "coords": "none",
+        "showgrid": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmap",
+        "overlist": "DR,CO,RA,DN",
+        "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriDG,UKOS",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 680,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "8a22415468136c64",
+        "type": "split",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 790,
+        "y": 460,
+        "wires": [
+            [
+                "dd3fdb9fb93115e0"
+            ]
+        ]
+    },
+    {
+        "id": "deebf451d48a8fd0",
+        "type": "function",
+        "z": "2d149f62a49487ac",
+        "name": "Parse Taxis",
+        "func": "let taxi = msg.payload;\n\nmsg.payload = {\n  name: \"Móvil: \" + taxi.taxiInternalNumber,\n  lat: taxi.latitude,\n  lon: taxi.longitude,\n  Estado:  \"LIBRE\",\n  icon: \"fa-taxi\",\n  iconColor: \"#00A1A8\",\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 580,
+        "wires": [
+            [
+                "e7eaebcfcc54a629",
+                "eb0cb92b90323412"
+            ]
+        ]
+    },
+    {
+        "id": "dd3fdb9fb93115e0",
+        "type": "link out",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "4c6aad8d0793a45f"
+        ],
+        "x": 895,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "4c6aad8d0793a45f",
+        "type": "link in",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "links": [
+            "dd3fdb9fb93115e0"
+        ],
+        "x": 135,
+        "y": 600,
+        "wires": [
+            [
+                "5ff0aaec56d16d91"
+            ]
+        ]
+    },
+    {
+        "id": "0298d77aecb63efd",
+        "type": "inject",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 750,
+        "y": 120,
+        "wires": [
+            [
+                "6a73e503f0f5af82"
+            ]
+        ]
+    },
+    {
+        "id": "6a73e503f0f5af82",
+        "type": "function",
+        "z": "2d149f62a49487ac",
+        "name": "View Token and expiry time",
+        "func": "const token = global.get('BearerToken');\nconst time = global.get('TokenExpiry');\nvar currentTime = Date.now();\nvar tokenTimestamp = new Date(time).getTime();\nconst leftMinutes =  Math.floor((tokenTimestamp-currentTime)/60000);\n\nmsg.topic = token;\nmsg.payload = \"ExpiryTime: \"+ leftMinutes + \" Minutes\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 120,
+        "wires": [
+            [
+                "b905e9fea646ec0c"
+            ]
+        ]
+    },
+    {
+        "id": "b905e9fea646ec0c",
+        "type": "debug",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "e7eaebcfcc54a629",
+        "type": "worldmap",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "lat": "-17.377337",
+        "lon": "-66.143781",
+        "zoom": "14",
+        "layer": "OSMC",
+        "cluster": "15",
+        "maxage": "10",
+        "usermenu": "hide",
+        "layers": "hide",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "true",
+        "coords": "none",
+        "showgrid": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmap",
+        "overlist": "DR,CO,RA,DN,HM",
+        "maplist": "OSMG,OSMC,EsriC,EsriS",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 640,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "91670c03.c29ad",
+        "type": "ui_template",
+        "z": "2d149f62a49487ac",
+        "group": "8b7cf8bb209bd049",
+        "name": "Clock Toolbar",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "format": "<script id=\"titleScript\" type=\"text/javascript\">\n    $('#clock').remove();\n    var toolbar = $('.md-toolbar-tools');\n    var div = $('<div/>');\n    var p = $('<p/ id=\"clock\">');\n    \n    $('#titleScript').parent().hide();\n    div.append(p);\n    div[0].style.margin = '5px 5px 5px auto';\n    toolbar.append(div);\n\n    function displayTitle(lh) {\n        p.text(lh); \n    }\n    \n    function upTime() {\n        var d = new Date();\n        p.text(d.toLocaleTimeString('de-AT'));\n    }\n\n    \n\n    // Watch the payload and update the title\n    (function(scope) {\n        scope.$watch('msg.payload', function(data) {\n            displayTitle(data);\n        });\n        setInterval(upTime,1000);\n    })(scope);\n</script>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "resendOnRefresh": false,
+        "templateScope": "global",
+        "className": "",
+        "x": 900,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "67fe4482456de349",
+        "type": "debug",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "5ff0aaec56d16d91",
+        "type": "switch",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "property": "payload.taxiStatus",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "IDLE",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "IDLE",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 230,
+        "y": 600,
+        "wires": [
+            [
+                "deebf451d48a8fd0"
+            ],
+            [
+                "418104f58d9e73cc"
+            ]
+        ]
+    },
+    {
+        "id": "418104f58d9e73cc",
+        "type": "function",
+        "z": "2d149f62a49487ac",
+        "name": "Parse Taxis",
+        "func": "let taxi = msg.payload;\n\nmsg.payload = {\n  name: \"Móvil: \" + taxi.taxiInternalNumber,\n  lat: taxi.latitude,\n  lon: taxi.longitude,\n  Estado:  taxi.taxiStatus,\n  icon: \"fa-taxi\",\n  iconColor: \"#FF1010\",\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 620,
+        "wires": [
+            [
+                "e7eaebcfcc54a629",
+                "576e7ea5792ee2f9"
+            ]
+        ]
+    },
+    {
+        "id": "576e7ea5792ee2f9",
+        "type": "debug",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "eb0cb92b90323412",
+        "type": "debug",
+        "z": "2d149f62a49487ac",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 540,
+        "wires": []
+    }
+]
