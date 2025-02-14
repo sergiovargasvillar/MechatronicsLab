@@ -1,0 +1,833 @@
+{
+	"info": {
+		"_postman_id": "ef30f1f2-6e0b-4e4d-8d5a-e426a9d2c63c",
+		"name": "Meta Taxi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "178220"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"login\": \"sergio\",\r\n\t\"password\": \".sergio*#7\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingserver.metas.uno:8081/api/auth/login",
+					"protocol": "https",
+					"host": [
+						"stagingserver",
+						"metas",
+						"uno"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"login\": \"sergio\",\r\n\t\"password\": \".sergio*#7\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stagingserver.metas.uno:8081/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"stagingserver",
+								"metas",
+								"uno"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 28 Nov 2021 01:28:36 GMT"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Content-Length",
+							"value": "89"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"53a5e64b-469b-42a7-8dbf-973c9bec8ec3\",\n    \"firstName\": \"Sergio\",\n    \"lastName\": \"Vargas\"\n}"
+				}
+			]
+		},
+		{
+			"name": "login localhost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"login\": \"sergio\",\r\n\t\"password\": \".sergio*#7\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"login\": \"sergio\",\r\n\t\"password\": \".sergio*#7\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stagingserver.metas.uno:8081/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"stagingserver",
+								"metas",
+								"uno"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 28 Nov 2021 01:28:36 GMT"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Content-Length",
+							"value": "89"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"53a5e64b-469b-42a7-8dbf-973c9bec8ec3\",\n    \"firstName\": \"Sergio\",\n    \"lastName\": \"Vargas\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Booking Save",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "58269d85-c7e0-4871-a043-c5d87b160193",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"origin\": {\r\n        \"enable\": true,\r\n        \"latitude\": -17.408247547851047,\r\n        \"longitude\": -66.19933796129004,\r\n        \"comment\": \"Calle Johannes Gutenberg, \"\r\n    },\r\n    \"destination\": {\r\n        \"enable\": false\r\n    },\r\n    \"client\": {\r\n        \"name\": \"Postman\",\r\n        \"phone\": \"674903671\",\r\n        \"addresses\": []\r\n    },\r\n    \"date\": \"2021-04-14T15:37:54.711Z\",\r\n    \"downTown\": false,\r\n    \"numberOfTaxis\": 1,\r\n    \"comment\": \"info ad\",\r\n    \"taxiType\": \"NORMAL\",\r\n    \"now\": true\r\n}\r\n\r\n\r\n {\"comment\": \"Cañada Strongest 899\", \"destination\": {\"enable\": false}, \"downTown\": false, \"now\": true, \"numberOfTaxis\": 1, \"origin\": {\"comment\": \"Cañada Strongest 899\", \"enable\": true, \"latitude\": -17.7729295, \"longitude\": -63.1840916}, \"taxiType\": \"ANY\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingserver.metas.uno:8081/api/booking/3rdParty",
+					"protocol": "https",
+					"host": [
+						"stagingserver",
+						"metas",
+						"uno"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"booking",
+						"3rdParty"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Booking Save",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"origin\": {\r\n        \"enable\": true,\r\n        \"latitude\": -17.408247547851047,\r\n        \"longitude\": -66.19933796129004,\r\n        \"comment\": \"Calle Johannes Gutenberg, \"\r\n    },\r\n    \"destination\": {\r\n        \"enable\": false\r\n    },\r\n    \"client\": {\r\n        \"name\": \"Postman\",\r\n        \"phone\": \"674903671\",\r\n        \"addresses\": []\r\n    },\r\n    \"date\": \"2021-04-14T15:37:54.711Z\",\r\n    \"downTown\": false,\r\n    \"numberOfTaxis\": 1,\r\n    \"comment\": \"info ad\",\r\n    \"taxiType\": \"NORMAL\",\r\n    \"now\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://stagingserver.metas.uno:8081/api/booking/3rdparty",
+							"protocol": "https",
+							"host": [
+								"stagingserver",
+								"metas",
+								"uno"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"booking",
+								"3rdparty"
+							]
+						}
+					},
+					"status": "Method Not Allowed",
+					"code": 405,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Allow",
+							"value": "GET"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 17 Sep 2021 01:40:04 GMT"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Taxi stop status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "00626f71-59c4-4892-b406-a4c2ad429f39",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/taxisstopstats/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"taxisstopstats",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Taxi config",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "7b8f79eb-5db2-4c7b-a384-2724d94196da",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/setting/booking/maximumNumberOfTaxis",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"setting",
+						"booking",
+						"maximumNumberOfTaxis"
+					],
+					"query": [
+						{
+							"key": "KL",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "KLL",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OnTaxiStop",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "67e0cee2-0f79-4736-ae25-93542fe342b2",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/taxiStops/onTaxiStop/Domani/331323100-0000-0000-0000-000000000000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"taxiStops",
+						"onTaxiStop",
+						"Domani",
+						"331323100-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Booking",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "e212f1ac-7cca-4edc-b808-3d12a76f2076",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"6b4c3a7f-022f-4391-af4f-24b480d4b17f\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingserver.metas.uno:8081/api/booking/cancel/",
+					"protocol": "https",
+					"host": [
+						"stagingserver",
+						"metas",
+						"uno"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"booking",
+						"cancel",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LeaveTaxiStop",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "9cc88955-95ac-436a-9527-6750824b81a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/taxiStops/leaveTaxiStop/31333000-0000-0000-0000-000000000000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"taxiStops",
+						"leaveTaxiStop",
+						"31333000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTaxiListInMainQueue",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "67e0cee2-0f79-4736-ae25-93542fe342b2",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/taxisstopstats/available",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"taxisstopstats",
+						"available"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTaxiWorkStatus",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "045bbbe3-9857-4c5f-a0c8-f11213ee895e",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/taxiworkstatus",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"taxiworkstatus"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTaxiWorkStatus from ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "af1795d4-3c3b-46a6-aa76-a44ae66059da",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/taxiworkstatus/6ea2f8ab-d074-410e-ae23-d41fe5586904",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"taxiworkstatus",
+						"6ea2f8ab-d074-410e-ae23-d41fe5586904"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetBooking from ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "80e538e2-8b17-43d8-8f41-ed2291429e37",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/booking/14ac76cb-a0fc-45e4-9aa5-ed9e1f6ab53e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"booking",
+						"14ac76cb-a0fc-45e4-9aa5-ed9e1f6ab53e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetBooking map URL from",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "6375fab3-e919-4c87-94f7-7f96d00c13a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/booking/1fc107ce-50a4-4de7-a529-079290de72d3/getBookingMapUrl/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"booking",
+						"1fc107ce-50a4-4de7-a529-079290de72d3",
+						"getBookingMapUrl",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get taxi lopcations",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "6375fab3-e919-4c87-94f7-7f96d00c13a8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/booking/1fc107ce-50a4-4de7-a529-079290de72d3/getBookingMapUrl/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"booking",
+						"1fc107ce-50a4-4de7-a529-079290de72d3",
+						"getBookingMapUrl",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save multiple taxi work status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ceeafabd-9d79-448b-b1b2-c9de222cc89d",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n    \"workStatus\":\"PENALIZED\",\r\n    \"reason\":\"hola\",\r\n    \"startDate\":\"2020-11-29T04:00:00.000Z\",\r\n    \"endDate\":\"2020-11-30T04:00:00.000Z\",\r\n    \"taxiList\":[\"31333500-0000-0000-0000-000000000000\",\r\n    \"31333600-0000-0000-0000-000000000000\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/taxiworkstatus/multiple",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"taxiworkstatus",
+						"multiple"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
