@@ -1,0 +1,775 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage[caption=false]{subfig}
+\usepackage{pgffor} % Enables loops
+\usepackage{adjustbox} % Better figure alignment
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{csvsimple}
+\usepackage{url}
+
+
+\newcommand{\standardfigure}[2]{
+  \includegraphics[width=0.4\textwidth,height=0.4\textwidth,keepaspectratio]{#1}
+  \caption{#2}
+}
+
+
+\bibliographystyle{IEEEtran}
+
+\begin{document}
+\renewcommand{\baselinestretch}{0.85}
+\renewcommand{\arraystretch}{1.2}
+
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+% Do not put math or special symbols in the title.
+\title{Real-World Evaluation of LoRaWAN Coverage and Propagation Modeling with UAV, Helikite, and Vehicle Platforms
+\\
+\large Field Experiments Using the AERPAW Testbed at NC State University}
+
+%Optimal Channel Switching and Randomization over Flat-Fading Channels for \textcolor{blue}{Outage} Capacity Maximization
+\author{Sergio Vargas Villar$^1$, Mihail Sichitiu$^1$, \.{I}smail G\"{u}ven\c{c}$^1$\\
+$^1$Department of Electrical and Computer Engineering, North Carolina State University, Raleigh, NC\\
+{\tt \{svargas3,msichitiu,iguvenc\}@ncsu.edu}
+}
+
+% make the title area
+
+\maketitle
+\thispagestyle{empty}
+% As a general rule, do not put math, special symbols or citations
+% in the abstract or keywords.
+\begin{abstract}
+\pagestyle{empty}
+
+This paper presents a field-based evaluation of LoRaWAN signal behavior across two locations in the Aerial Experimentation and Research Platform for Advanced Wireless (AERPAW) testbed: Lake Wheeler Field and Centennial Campus at NC State University. Measurements were collected using three transmission platforms: a car, a drone flying at 50 meters, and a helikite operating at 300 meters altitude. Each platform transmitted LoRaWAN packets across a network of gateways, allowing us to study how signal quality varies under different mobility and altitude conditions.
+
+We focus on analyzing received signal strength (RSSI) and Signal-to-Noise Ratio (SNR), and we use the Log-Distance Path Loss Model to estimate propagation loss. For each gateway, we optimize the path loss exponent and reference distance based on real measurements. The results show clear differences in signal behavior depending on the platform used. The helikite, thanks to its high and steady altitude, provided the most reliable performance and lowest model error. In contrast, the drone and vehicle experiments captured the impact of shorter range, mobility, and environmental obstructions.
+
+Overall, the findings help explain how platform characteristics and deployment conditions affect LoRaWAN coverage. This study also highlights the benefits of using real-world data to fine-tune path loss models, which is important for planning and optimizing LoRaWAN networks in mixed environments.
+
+
+\pagestyle{empty}
+\textit{Index~Terms}--- LoRa, path loss model, LPWAN, Internet of Things (IoT), coverage analysis, UAV.
+\end{abstract}
+
+%\begin{IEEEkeywords}
+%Channel switching, jamming, Nash equilibrium, capacity, time-sharing, power allocation.
+%\end{IEEEkeywords}
+
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+%\IEEEpeerreviewmaketitle
+
+\vspace{-0.3cm}
+
+\section{Introduction}\label{sec:intro}
+\subsection{Background}
+
+Long-Range (LoRa) is a proprietary wireless communication technology developed by Semtech that enables low-power, long-range, and secure data transmission for Internet of Things (IoT) applications~\cite{SemtechCorporation2024WhatLoRa}. Utilizing Chirp Spread Spectrum (CSS) modulation, LoRa operates in unlicensed sub-GHz frequency bands, offering robust connectivity across vast geographical areas while maintaining minimal power consumption~\cite{SemtechCorporation2024WhatLoRa }.
+
+Long-Range Wide Area Network (LoRaWAN) is a low-power wide area network (LPWAN) standard developed and maintained by the LoRa Alliance~\cite{SemtechCorporation2024WhatLoRaWAN}. It enables the connection of battery-operated IoT devices over long distances using the unlicensed Industrial, Scientific, and Medical (ISM) radio bands while ensuring bidirectional communication, end-to-end security, mobility, and geolocation services~\cite{SemtechCorporation2024WhatLoRaWAN}. Recognized by the International Telecommunication Union (ITU) as a global LPWAN standard, LoRaWAN provides seamless interoperability across manufacturers and supports scalable deployments for IoT applications~\cite{SemtechCorporation2024WhatLoRaWAN}.
+
+Aerial Experimentation and Research Platform for Advanced Wireless (AERPAW) is a National Science Foundation (NSF) PAWR platform that enables advanced wireless research through aerial and ground-based network experimentation~\cite{AERPAW2024AERPAW}. Located in Raleigh, North Carolina, AERPAW provides a testbed for studying wireless communication technologies, including 5G, IoT, and unmanned aerial systems (UAS)~\cite{AERPAW2024AERPAW}. As part of its infrastructure, AERPAW has implemented a LoRaWAN network to support low-power, large-scale IoT experiments, allowing research on long-range wireless connectivity for smart cities, environmental monitoring and mobility applications~\cite{AERPAW2024AERPAW}.
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Drone/Drone.jpg}
+    \caption{AERPAW Drone Platform Equipped with LoRaWAN Transmitter (SPN)}
+    \label{fig:Drone}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/CAR/Car.jpeg}
+    \caption{LoRaWAN Transmitter Mounted on a Vehicle Roof Rack for Ground-Based Measurements}
+    \label{fig:Car}
+\end{figure}
+
+\subsection{Motivation}
+
+This study investigates the real-world performance of a deployed LoRaWAN network within the AERPAW testbed at NC State, specifically at Lake Wheeler Field and Centennial Campus. The analysis focuses on key network metrics, including received signal strength indicator (RSSI), signal-to-noise ratio (SNR), and data rate (DR), across different gateways. These measurements are used to estimate path loss, which is then compared against theoretical predictions from established propagation models for LoRaWAN in diverse environments.
+
+Instead of using a deterministic model such as ITU-R P.1225, this study applies the Log-Distance Path Loss Model due to its adaptability in urban and suburban settings. Recent studies, including the work by O. Dieng, C. Pham, and O. Thiare~\cite{Dieng2020ComparingNetworks}, demonstrate that this model provides a flexible framework for characterizing LoRaWAN signal propagation across varying terrain conditions. By tuning the path loss exponent and reference distance for each gateway, the model can be optimized to minimize errors, ensuring a more accurate representation of real-world conditions.
+
+The results of this study provide valuable insights into LoRaWAN performance under different deployment scenarios, such as ground-based, drone-based, and helikite-based transmissions. The findings contribute to optimizing large-scale LoRaWAN deployments, improving path loss modeling accuracy, and enhancing network planning strategies for long-range IoT applications.
+
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Helikate.jpeg}
+    \caption{LoRaWAN Device Attached to a Helikite for High-Altitude Stationary Measurements}
+    \label{fig:Helikate}
+\end{figure}
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/FlightPlan.png}
+    \caption{Predefined Drone Flight Path Used During LoRaWAN Measurements at Lake Wheeler Field}
+    \label{fig:FlightPlanLW}
+\end{figure}
+
+
+\subsection{Paper Organization}
+The rest of this paper is structured as follows. Section~\ref{sec:experimental_setup} details the experimental setup, including the LoRaWAN network configuration, transmission hardware, and deployment locations. Section~\ref{sec:system} describes the system setup, outlining the transmission parameters and data collection methodology.
+
+Section~\ref{sec:related_work} reviews prior work on LoRaWAN performance and propagation modeling, highlighting the use of empirical and semi-deterministic models in various environments.
+
+
+Section~\ref{sec:propagation_model} introduces the Log-Distance Path Loss Model and explains the optimization process used to align the model with real-world measurements. 
+
+Section~\ref{sec:results} presents the experimental results and analysis. The results include RSSI, SNR, and path loss variations across different gateways. This section is divided into three main experiments based on the mobility platform used:
+\begin{itemize}
+    \item \textbf{Car-Based Experiment:} This subsection evaluates the LoRaWAN performance when the transmitter is mounted on a moving vehicle. A detailed analysis is provided to assess how mobility influences signal propagation.
+    \item \textbf{Helikite-Based Experiment:} This subsection presents results from experiments where the LoRaWAN transmitter was attached to a helikite at varying altitudes. The analysis examines how height affects signal strength and path loss, particularly in semi-urban and open-field environments.
+    \item \textbf{Drone-Based Experiment:} This subsection analyzes data collected from aerial LoRaWAN transmissions using a drone Fig.~\ref{fig:Drone} The results focus on evaluating the impact of altitude, trajectory, and dynamic movement on network performance.
+\end{itemize}
+
+Each experiment is structured with a dedicated results subsection followed by a detailed analysis, discussing key observations and performance trends. 
+
+Finally, Section~\ref{sec:conclusion} provides concluding remarks and potential future directions for improving LoRaWAN deployment strategies in urban and mobile scenarios.
+
+
+ \section{Experimental Setup}\label{sec:experimental_setup}
+To evaluate the performance of a LoRaWAN network in diverse real-world conditions, multiple field experiments were carried out using different mobility platforms and environments. The experiments were carried out on the AERPAW testbed, using a combination of aerial and ground-based LoRaWAN transmissions. The test campaigns included: 
+
+\begin{itemize}
+    \item \textbf{Car-based experiment:} LoRaWAN transmissions were recorded while a vehicle moved through different locations Fig.~\ref{fig:Car}, including Lake Wheeler and Centennial Campus.
+          
+    \item \textbf{Helikite-based experiments:} Two separate experiments were performed using a helikite Fig.~\ref{fig:Helikate}: one at Lake Wheeler and another during the Packapalooza 2024 event, which took place at North Campus. The altitude was initially adjusted and then kept constant, with minor lateral drift caused by wind. Transmissions from both flights were received by gateways located at Centennial Campus and Lake Wheeler.
+
+
+    \item \textbf{Drone-based experiment:} Conducted at Lake Wheeler, where a LoRaWAN transmitter was mounted on a drone to evaluate aerial coverage at fixed altitude, but moving in a preplanned trajectory showed in Fig.~\ref{fig:FlightPlanLW} .
+
+\end{itemize}
+
+
+\section{System setup}\label{sec:system}
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/Centennial Campus.png}
+    \caption{Deployment of LoRaWAN Gateways CC2 and CC3 in NC State’s Centennial Campus (Urban Environment)}
+    \label{fig:CC}
+\end{figure}
+
+
+
+
+For all experiments, a LoStik LoRaWAN USB Transmitter by Ronoth, equipped with the Microchip RN2903 module, was used as the transmitting device. The network infrastructure consisted of seven RAK7289 LoRaWAN gateways deployed at different locations at Centennial Campus and Lake Wheeler Field, as illustrated in Fig.~\ref{fig:CC} and Fig.~\ref{fig:LW} The transmitter device provided real-time information on its geographic location, timestamp of each transmission, and the assigned data rate (DR). On the receiving side, the recorded data included received signal strength indicator (RSSI), signal-to-noise ratio (SNR), reception channel, received timestamp, operating frequency, spreading factor (SF), radio frequency(RF) chain, and bandwidth.
+
+To maintain consistency across experiments, the transmitted data packets were fixed to 7-byte hexadecimal values, containing a combination of a unique packet number and timestamp. The transmissions were performed at different data rates (DR0 to DR3), with an inter-packet transmission delay of 2.5 seconds, ensuring a controlled and repeatable measurement process. The LoStik transmitter operated in compliance with the LoRaWAN protocol, using the Media Access Control (MAC) layer with Adaptive Data Rate (ADR) enabled, allowing dynamic adjustment of transmission parameters based on network conditions.
+
+The transmission syntax followed the RN2903 module's command structure, as described in the RN2903 LoRa™ Technology Module Command Reference User’s Guide~\cite{Microchip2018RN2903_Reference}:
+
+\begin{verbatim}
+mac tx <type> <portno> <data>
+\end{verbatim}
+
+where:
+\begin{itemize}
+    \item \texttt{<type>} specifies the uplink payload type: either \texttt{cnf} (confirmed) or \texttt{uncnf} (unconfirmed).
+    \item \texttt{<portno>} represents the port number (1 to 223).
+    \item \texttt{<data>} contains the hexadecimal payload, with length constraints dependent on the data rate.
+\end{itemize}
+
+In LoRaWAN, the Data Rate (DR) determines both the spreading factor (SF) and the bandwidth of the transmission. For the US915 band used in our experiments, DR0 corresponds to SF10 with a 125 kHz bandwidth, DR1 to SF9, DR2 to SF8, and DR3 to SF7. These configurations directly impact range and throughput—lower data rates, such as DR0, provide extended range at the expense of throughput, whereas higher data rates, like DR3, enable faster transmissions but over shorter distances. In our setup, the data rate was not fixed; instead, it was dynamically adjusted by the ADR algorithm based on link quality.
+
+
+
+The use of ADR allowed the system to dynamically adapt Spreading Factor (SF) and other transmission parameters based on network conditions. These controlled experiments provide significant observations into LoRaWAN performance under varying deployment scenarios, including aerial, vehicular, and stationary configurations.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/Lake Wheeler.png}
+    \caption{Deployment of LoRaWAN Gateways LW1–LW5 in Lake Wheeler Field (Open and Semi-Rural Environment)}
+    \label{fig:LW}
+\end{figure}
+
+\section{Related Work}\label{sec:related_work}
+
+LoRaWAN performance has been extensively analyzed in different propagation environments using empirical, semi-deterministic, and theoretical models. Several studies have focused on evaluating path loss models to improve LoRaWAN signal predictions in urban, suburban, and rural deployments.
+
+O. Dieng, C. Pham, and O. Thiare~\cite{Dieng2020ComparingNetworks} analyzed the performance of several empirical path loss models, including the Log-Distance Path Loss Model, in LoRaWAN networks. Their study highlighted that the Log-Distance Model offers a flexible approach to predicting signal attenuation by adjusting the path loss exponent ($n$) based on environmental conditions, making it suitable for diverse deployment scenarios.
+
+G. Ingabire, H. Larijani, and R. M. Gibson~\cite{Ingabire2020PerformanceEnvironment} compared multiple propagation models, including ITU-R P.1225, Log-Distance, Okumura-Hata, and WINNER II, in an urban LoRaWAN deployment. Their results indicated that while ITU-R P.1225 performed well in certain urban conditions, the Log-Distance Model provided comparable accuracy with the advantage of being adaptable to different terrain types.
+
+A. Harinda, H. Larijani, and R. M. Gibson~\cite{Harinda2020Trace-drivenScenario} performed a trace-driven simulation of LoRaWAN air channel propagation in an urban environment, evaluating models such as Deygout 94, ITU-R 525/526, and COST-Walfish Ikegami (COST-WI). Their findings emphasized the significance of refining empirical models like Log-Distance to enhance LoRaWAN coverage predictions.
+
+A. Kucherov, A. Berezkin, V. Nakonechnyi, O. Sushchenko, I. Ogirko, and D. Rybalko~\cite{Kucherov2021InvestigationSignals} studied the impact of multipath propagation on LoRaWAN transmissions, demonstrating how signal reflections and environmental obstacles affect RSSI and path loss. Their results suggest that LoRa’s chirp spread spectrum (CSS) modulation improves resilience against multipath fading, reinforcing the importance of environment-specific tuning of path loss models.
+
+J. P. Lima, A. A. Silva, and E. S. Cerqueira~\cite{Lima2024LoRaRegions}  investigated LoRaWAN deployments in Amazonian regions, highlighting the need for location-specific tuning of propagation models in dense vegetation and remote environments. Their work demonstrates that models like Log-Distance can be adjusted for better accuracy when calibrated with real-world measurements.
+
+These studies collectively highlight the adaptability of the Log-Distance Path Loss Model for LoRaWAN applications. While empirical models provide general insights into signal attenuation, their accuracy can be significantly improved through real-world calibration. The present study builds upon this foundation by optimizing the Log-Distance Model using experimental data from the AERPAW testbed, fine-tuning the path loss exponent and reference distance for each gateway to achieve the best model fit.
+
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.2}
+\centering
+\caption{Summary of LoRaWAN Experimental Configuration and Deployment Parameters}
+\label{tab:experiment_setup}
+\small
+\begin{tabular}{|C{3.5cm}|C{4cm}|}
+
+\hline
+\textbf{Parameter} & \textbf{Value} \\ \hline
+Transmitter & LoStik RN2903 (Ronoth) \\ \hline
+Gateways & 7x RAK7289 \\ \hline
+Spreading Factor (SF) & 7-10 \\ \hline
+Data Rate (DR) & DR0-DR3 \\ \hline
+Packet Interval & 2.5s \\ \hline
+Payload Size & 7 bytes (Hex) \\ \hline
+Adaptive Data Rate (ADR) & Enabled \\ \hline
+Experiment Locations & Lake Wheeler, Centennial and North Campus\\ \hline
+Experiment Types & Drone-based, Helikite-based, Car-based \\ \hline
+Mobility & Fixed (Helikite), Aerial (Drone), Ground Mobile (Car) \\ \hline
+\end{tabular}
+\end{table}
+
+
+\section{Propagation Model}\label{sec:propagation_model}
+
+Accurate propagation models are crucial for effective LoRaWAN network planning. This study focuses on optimizing the Log-Distance Path Loss Model, which is widely used in LoRaWAN performance evaluations due to its adaptability to various environments~\cite{Dieng2020ComparingNetworks}.
+
+Our approach involves fine-tuning the model’s parameters using experimental data collected on the AERPAW testbed, ensuring accurate prediction of signal attenuation in real deployment environments.
+
+
+\subsection{Log-Distance Path Loss Model}
+
+The Log-Distance Path Loss Model expresses the relationship between path loss ($PL$) and distance ($d$) in a logarithmic form:
+
+\begin{equation}
+PL(d) = PL(d_0) + 10 n \log_{10} \left(\frac{d}{d_0} \right) + X_\sigma
+\label{eq:logdistance}
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $PL(d)$ is the estimated path loss at distance $d$ (in dB),
+    \item $PL(d_0)$ is the reference path loss at a reference distance $d_0$,
+    \item $n$ is the path loss exponent, which varies depending on the propagation environment,
+    \item $d$ is the distance between the transmitter and receiver (in meters),
+    \item $d_0$ is the reference distance (in meters), ensuring a minimum free-space loss constraint,
+    \item $X_\sigma$ is a zero-mean Gaussian variable accounting for shadow fading effects~\cite{Dieng2020ComparingNetworks}.
+\end{itemize}
+
+Unlike deterministic models such as ITU-R P.1225 or Okumura-Hata, the Log-Distance Model allows flexibility in tuning parameters ($n$ and $PL(d_0)$) to better match real-world LoRaWAN deployments~\cite{Dieng2020ComparingNetworks}. This adaptability makes it suitable for diverse propagation environments, as demonstrated in several LoRaWAN studies where environment-specific calibration significantly improved accuracy~\cite{Ingabire2020PerformanceEnvironment}.
+
+
+
+\subsection{Geodesic Distance Calculation in 3D}
+
+To ensure accurate path loss modeling, we compute the true 3D distance between the LoRaWAN transmitter and each receiving gateway, accounting for both surface curvature and elevation differences. The horizontal (great-circle) distance is calculated using the haversine formula:
+
+\begin{equation}
+    d_{\text{horiz}} = 2 R \cdot \arctan2\left( \sqrt{a}, \sqrt{1 - a} \right)
+\end{equation}
+
+\begin{equation}
+    a = \sin^2\left( \frac{\Delta \phi}{2} \right) + \cos(\phi_1) \cos(\phi_2) \sin^2\left( \frac{\Delta \lambda}{2} \right)
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $R$ is the average Earth radius, taken as 6,371~km.
+    \item $\phi_1$, $\phi_2$ are the latitudes (in radians) of the transmitter and receiver.
+    \item $\Delta \phi$ and $\Delta \lambda$ represent the differences in latitude and longitude, respectively, expressed in radians.
+
+\end{itemize}
+
+To incorporate vertical separation, we use the transmitter and gateway altitudes, denoted as $h_1$ and $h_2$, and compute the total 3D distance as:
+
+\begin{equation}
+    d_{\text{3D}} = \sqrt{d_{\text{horiz}}^2 + (h_2 - h_1)^2}
+\end{equation}
+
+This formulation ensures that gateways located at different elevations are correctly accounted for in the path loss model. The implementation is based on methods described by Veness~\cite{ChrisVeness2020MovableDistance}.
+
+\begin{table}[t]
+  \centering
+  \caption{Optimized Log-Distance Model Parameters – Car-Based Experiment}
+  \label{tab:car_optimized_pathloss}
+  \csvreader[tabular=|c|c|c|c|c|,
+              table head=\hline Gateway & n & PL(d0) & MAE & RMSE \\\hline,
+              late after line=\\\hline]
+             {Figures/CAR/Optimized_PathLoss/Optimized_PathLoss_Results.csv}
+             {1=\gateway,2=\n,3=\PLd,4=\MAE,5=\RMSE}
+             {\gateway & \n & \PLd & \MAE & \RMSE}
+\end{table}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/CAR/RSSI-MAP-CAR.png}
+    \caption{Vehicle Trajectory and Gateway Locations with RSSI Overlay – Car-Based Experiment}
+    \label{fig:car_rssi_map}
+\end{figure}
+
+
+
+
+\subsection{Application to LoRaWAN Measurements}
+To evaluate the applicability of the Log-Distance Path Loss Model, we compare its predictions with measured path loss values collected from the LoRaWAN deployment at the AERPAW testbed. The experimental setup consists of a LoStik LoRaWAN transmitter sending packets at varying data rates, received by multiple RAK7289 gateways deployed at different distances.
+
+For each gateway, the measured path loss is calculated as:
+
+\begin{equation}
+    PL_{\text{measured}} = P_{\text{tx}} - RSSI
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $P_{\text{tx}}$ is the transmit power (20 dBm for the LoStik transmitter),
+    \item RSSI is the received signal strength indicator measured at the gateway.
+\end{itemize}
+
+These measurements inherently capture variations introduced by changing data rates and spreading factors, as controlled by ADR during the experiments~\cite{LoRaAlliance2021LoRaWANSpecification}.
+
+The measured path loss is compared against the Log-Distance Model’s predictions. To improve accuracy, we adjust the path loss exponent ($n$) and reference distance ($d_0$) per gateway through an iterative optimization process, which minimizes Mean Absolute Error (MAE) and Root Mean Square Error (RMSE) between the measured and modeled values~\cite{Dieng2020ComparingNetworks}.
+
+
+
+\begin{figure}[t]
+    \centering
+    \newcommand{\gwlist}{LW1, LW2, LW3, LW4, LW5, CC2, CC3,ALL} % List of gateways
+    
+    \foreach \gw [count=\i from 1] in \gwlist {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/CAR/RSSI_Distributions/RSSI_\gw.png}%
+            \label{fig:rssi_\gw\i} % Unique label using counter
+        }%
+        \hfill
+    }
+    
+    \caption{RSSI Distribution Across Gateways – Car-Based Experiment}
+    \label{fig:car_rssi_all}
+\end{figure}
+
+\subsection{Path Loss Model Optimization and Error Evaluation}
+Since the path loss exponent ($n$) and reference distance ($d_0$) are highly dependent on environmental conditions, we employ an automated parameter optimization method for each LoRaWAN gateway. This optimization iterates over a predefined range of path loss exponent values ($0.5 \leq n \leq 9.5$) and reference distances ($10 \leq d_0 \leq 200$ m) to find the best fit.
+
+The accuracy of the model is assessed using the following error metrics:
+
+\begin{itemize}
+    \item Mean Absolute Error (MAE):
+    \begin{equation}
+        \text{MAE} = \frac{1}{N} \sum_{i=1}^{N} |PL_{\text{measured}, i} - PL_{\text{model}, i}|
+    \end{equation}
+
+    \item Root Mean Square Error (RMSE):
+    \begin{equation}
+        \text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (PL_{\text{measured}, i} - PL_{\text{model}, i})^2}
+    \end{equation}
+\end{itemize}
+
+where:
+\begin{itemize}
+    \item $PL_{\text{measured}, i}$ is the measured path loss at the $i$-th data point,
+    \item $PL_{\text{model}, i}$ is the modeled path loss at the $i$-th data point,
+    \item $N$ is the total number of measurements.
+\end{itemize}
+
+By iteratively minimizing MAE and RMSE, we automatically determine the best values of $n$ and $d_0$ per gateway, ensuring an optimal fit to real-world LoRaWAN path loss measurements. This approach follows the methodology proposed by O. Dieng, C. Pham, and O. Thiare~\cite{Dieng2020ComparingNetworks}, where parameter tuning significantly improved model accuracy for LoRa deployments~\cite{Dieng2020ComparingNetworks}.
+
+\begin{figure}[t]
+    \centering
+    \foreach \gw in {LW1, LW2, LW3, LW4, LW5, CC2, CC3, ALL} {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/CAR/SNR_Distributions/SNR_\gw.png}%
+            \label{fig:snr_\gw}%
+        }%
+        \hfill
+    }
+    \caption{SNR Distribution Across Gateways – Car-Based Experiment}
+    \label{fig:car_snr_all}
+\end{figure}
+
+
+
+\begin{figure}[t]
+    \centering
+    \foreach \gw in {LW1, LW2, LW3, LW4, LW5, CC2, CC3} {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/CAR/Optimized_PathLoss/PathLoss_\gw.png}%
+            \label{fig:pathloss_distance_\gw}%
+        }%
+        \hfill
+    }
+    \caption{Measured vs. Modeled Path Loss Using Log-Distance Model – Car-Based Experiment}
+    \label{fig:pathloss_fit_car}
+\end{figure}
+
+\subsection{Adaptation to LoRaWAN Deployments}
+Prior research highlights that a single set of log-distance model parameters may not generalize well across different environments. Factors such as urban density, vegetation, and mobility influence LoRa signal propagation, making scenario-specific calibration essential~\cite{Dieng2020ComparingNetworks, Ingabire2020PerformanceEnvironment}. In our analysis, we optimize parameters separately for each gateway, accounting for site-specific characteristics such as:
+
+\begin{itemize}
+    \item Urban vs. Rural Deployment: Higher $n$ values are expected in dense urban environments due to building obstructions.
+    \item Mobility Effects: Dynamic nodes (e.g., drone-based or vehicular experiments) introduce additional signal fading variations, impacting path loss predictions.
+    \item Frequency Dependency: While LoRa operates in the sub-GHz spectrum, minor frequency-dependent effects can influence fitted path loss parameters.
+\end{itemize}
+
+By incorporating these considerations, our study refines the log-distance path loss model for LoRaWAN deployments at AERPAW, ensuring that optimized parameters are representative of the real-world conditions observed in our experimental data.
+propagation modeling.
+
+\vspace{-0.1cm}
+
+\begin{figure}[t]
+
+\centering
+\foreach \gw in {LW1, LW2, LW3, LW4, LW5, CC2, CC3} {%
+\subfloat[\gw]{%
+\includegraphics[width=0.48\linewidth]{Figures/CAR/RSSI_vs_Distance_Per_Gateway_SF/RSSI_SF_\gw.png}%
+\label{fig:car_rssi_distance_sf_\gw}%
+}%
+\hfill
+}
+\caption{RSSI vs. Distance and Spreading Factor – Car-Based Experiment}
+\label{fig:car_rssi_distance_sf_all}
+\end{figure}
+
+
+\section{Results and Analysis}\label{sec:results}
+
+To evaluate the performance of LoRaWAN in real-world conditions, a series of experiments were conducted across different environments and mobility scenarios. Table~\ref{tab:experiment_setup} summarizes the key parameters used in these experiments, including transmission settings, network infrastructure, and measurement details. 
+
+
+
+
+\subsection{Car-Based Experiment}
+
+The car-based experiment was conducted to evaluate LoRaWAN signal propagation under mobile, ground-level conditions. A LoStik LoRaWAN transmitter was installed on a vehicle that followed a planned route spanning Lake Wheeler Field and Centennial Campus. This trajectory covered a diverse mix of environments, including open rural areas, tree-lined roads, and urban zones with building obstructions.
+
+The goal was to capture signal behavior across a broad range of distances and propagation conditions, offering a valuable comparison point against the aerial measurements conducted with the drone and helikite.Unlike the aerial platforms, the vehicle’s low-altitude movement and ground-level proximity introduced stronger multipath propagation, increased shadowing, and greater signal variability-reflecting conditions commonly encountered in real-world mobile and urban IoT deployments.
+
+\begin{table}[t]
+  \centering
+  \caption{Optimized Path Loss Model Parameters – Helikite Experiment (Lake Wheeler Field)}
+  \label{tab:helikite_lw_optimized_pathloss}
+  \csvreader[tabular=|c|c|c|c|c|,
+              table head=\hline Gateway & n & PL(d0) & MAE & RMSE \\\hline,
+              late after line=\\\hline]
+             {Figures/Helikate/LakeWheeler/Optimized_PathLoss/Optimized_PathLoss_Results.csv}
+             {1=\gateway,2=\n,3=\PLd,4=\MAE,5=\RMSE}
+             {\gateway & \n & \PLd & \MAE & \RMSE}
+\end{table}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Helikate/LakeWheeler/RSSI MAP.png}
+    \caption{Helikite Trajectory and Gateway Locations with RSSI Overlay – Helikite Experiment (Lake Wheeler Field)}
+    \label{fig:helikite_lw_rssi_map}
+\end{figure}
+
+
+
+\subsubsection{Results and Analysis}
+Figure~\ref{fig:car_rssi_map} shows the vehicle’s trajectory and the locations of the deployed gateways. The RSSI values are overlaid on the map, reflecting the signal strength from the nearest gateway at each point. The path spans from Centennial Campus to Lake Wheeler Field, and the color gradient along the route visually captures signal variation due to changes in propagation environment and gateway proximity.
+
+Figures~\ref{fig:car_rssi_all} and~\ref{fig:car_snr_all} present the RSSI and SNR distributions, respectively, for each gateway. The final subplot (h) in both figures consolidates all gateway data into a single composite view. Gateways CC2 and CC3, both located in Centennial Campus, received a larger number of packets than others. This is because the vehicle spent more time in the Centennial area, resulting in more line-of-sight (LOS) segments and a denser dataset. LW3 and LW5, on the other hand, recorded fewer packets, likely due to their locations on the edge of the trajectory or in partially obstructed zones. The broader RSSI and SNR distributions for LW1 and LW2 reflect greater variability in signal reception, influenced by terrain changes and transient obstructions such as vegetation or nearby structures.
+
+
+\begin{figure}[t]
+    \centering
+    \newcommand{\gwlist}{LW1, LW2, LW4, CC2,ALL} % List of gateways
+    
+    \foreach \gw [count=\i from 1] in \gwlist {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Helikate/LakeWheeler/RSSI_Distributions/RSSI_\gw.png}%
+            \label{fig:helikate_lw_rssi_\gw\i} % Unique label using counter
+        }%
+        \hfill
+    }
+    
+    \caption{RSSI Distribution Across Gateways – Helikite Experiment (Lake Wheeler Field)}
+    \label{fig:helikite_lw_rssi_all}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \foreach \gw in {LW1, LW2, LW4, CC2, ALL} {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Helikate/LakeWheeler/SNR_Distributions/SNR_\gw.png}%
+            \label{fig:helikate_lw_snr_\gw}%
+        }%
+        \hfill
+    }
+    \caption{SNR Distribution Across Gateways – Helikite Experiment (Lake Wheeler Field)}
+    \label{fig:helikite_lw_snr_all}
+\end{figure}
+
+
+The path loss behavior was further analyzed by fitting the Log-Distance Path Loss Model to the measured data. Table~\ref{tab:car_optimized_pathloss} summarizes the optimized parameters for each gateway, including the path loss exponent ($n$), reference path loss $PL(d_0)$, MAE, and RMSE were evaluated for each gateway. Gateways CC2 and LW5 exhibited higher path loss exponents of 3.5 and 3.1, respectively, which may indicate more obstructed or complex propagation environments. LW2 required a relatively large reference distance ($d_0 = 51$ m), potentially due to early signal degradation caused by environmental obstructions or non-line-of-sight (NLOS) conditions.
+
+Gateways CC2 and CC3 received a higher number of packets, which improves statistical confidence in their fitted models. However, this also captures more signal variability, particularly in urban environments where multipath and shadowing are present. This is reflected in CC3’s elevated RMSE and path loss exponent ($n = 3.1$), which indicate more challenging propagation conditions within Centennial Campus.
+
+Gateways with lower path loss exponents, such as LW1 ($n = 2.6$) and LW3 ($n = 2.7$), correspond to more open, rural areas of Lake Wheeler Field, where signal paths were likely more direct and unobstructed. In contrast, LW4 recorded the highest path loss exponent ($n = 3.8$) and RMSE, indicating strong attenuation likely caused by terrain changes or physical obstructions along the route.
+
+Figure~\ref{fig:pathloss_fit_car} visualizes the fitted Log-Distance Path Loss Model curves for each gateway. The blue dots represent the measured path loss, while the red lines correspond to the model fit. The subplots demonstrate the fit quality across different locations. Gateways in the field (LW1 to LW5) show tighter clustering of data points when LOS was available. Gateways CC2 and CC3, located on elevated structures within Centennial Campus, captured more variation in received power due to more complex propagation paths in urban surroundings.
+
+Figure~\ref{fig:car_rssi_distance_sf_all} displays the relationship between RSSI and distance across different spreading factors (SF7 to SF10). Each subplot corresponds to one gateway. As expected, RSSI generally decreases with increasing distance, but the observed trends vary per gateway depending on local propagation conditions. Higher SF values appear more frequently at longer distances, consistent with the operation of ADR, which dynamically adjusts SF to maintain link reliability.
+
+Overall, the results illustrate the spatial variability of LoRaWAN signal propagation across mixed environments and emphasize the need for location-specific model calibration to accurately capture the impact of terrain, mobility, and environmental features.
+
+
+
+\subsection{Helikite-Based Experiment}
+
+\begin{figure}[t]
+    \centering
+    \foreach \gw in {LW1, LW2, LW4, CC2} {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Helikate/LakeWheeler/Optimized_PathLoss/PathLoss_\gw.png}%
+            \label{fig:helikate_lw_pathloss_distance_\gw}%
+        }%
+        \hfill
+    }
+    \caption{Measured vs. Log-Distance Modeled Path Loss Across Gateways – Helikite Experiment (Lake Wheeler Field)}
+    \label{fig:helikite_lw_pathloss_fit}
+\end{figure}
+
+
+
+\begin{figure}[t]
+\centering
+\foreach \gw in {LW1, LW2,LW4, CC2} {%
+\subfloat[\gw]{%
+\includegraphics[width=0.48\linewidth]{Figures/Helikate/LakeWheeler/RSSI_vs_Distance_Per_Gateway_SF/RSSI_SF_\gw.png}%
+\label{fig:helikate_lw_rssi_distance_sf_\gw}%
+}%
+\hfill
+}
+\caption{RSSI vs. Distance Across Gateways and Spreading Factors – Helikite Experiment (Lake Wheeler Field)}
+\label{fig:helikite_lw_rssi_distance_sf_all}
+\end{figure}
+
+
+
+The helikite experiments provide a unique perspective on signal propagation by using an aerial platform that maintains a stable altitude. Unlike mobile platforms such as vehicles or drones, the helikite hovers in place, moving only slightly due to wind. This setup reduces the variability introduced by changing positions and speeds, resulting in more consistent link measurements. Each campaign—one conducted at Lake Wheeler Field and another at North Campus during the Packapalooza outreach event—was carried out independently on different days. In both cases, the helikite remained airborne for extended periods, allowing for the collection of a larger number of packets compared to other experiments.
+
+\subsubsection{Lake Wheeler Field}
+
+\begin{table}[t]
+  \centering
+  \caption{Optimized Path Loss Model Parameters – Helikite Experiment (North Campus)}
+  \label{tab:helikite_nc_optimized_pathloss}
+  \csvreader[tabular=|c|c|c|c|c|,
+              table head=\hline Gateway & n & PL(d0) & MAE & RMSE \\\hline,
+              late after line=\\\hline]
+             {Figures/Helikate/Packpalooza/Optimized_PathLoss/Optimized_PathLoss_Results.csv}
+             {1=\gateway,2=\n,3=\PLd,4=\MAE,5=\RMSE}
+             {\gateway & \n & \PLd & \MAE & \RMSE}
+\end{table}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/Helikate/Packpalooza/RSSI MAP.png}
+    \caption{Flight Path and Gateway Locations During Helikite Experiment (North Campus)}
+    \label{fig:helikite_nc_rssi_map}
+\end{figure}
+
+
+
+
+\begin{figure}[t]
+    \centering
+    \newcommand{\gwlist}{LW1, LW2, LW4, CC2, CC3,ALL} % List of gateways
+    
+    \foreach \gw [count=\i from 1] in \gwlist {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Helikate/Packpalooza/RSSI_Distributions/RSSI_\gw.png}%
+            \label{fig:helikate_pp_rssi_\gw\i} % Unique label using counter
+        }%
+        \hfill
+    }
+    
+    \caption{RSSI Distribution Across Gateways – Helikite Experiment (North Campus)}
+    \label{fig:helikite_nc_rssi_all}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \foreach \gw in {LW1, LW2, LW4, CC2, CC3, ALL} {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Helikate/Packpalooza/SNR_Distributions/SNR_\gw.png}%
+            \label{fig:helikate_pp_snr_\gw}%
+        }%
+        \hfill
+    }
+    \caption{SNR Distribution Across Gateways – Helikite Experiment (North Campus)}
+    \label{fig:helikite_nc_snr_all}
+\end{figure}
+
+
+\textbf{Results and Analysis.} During this experiment, the helikite maintained a nearly constant altitude of 300 meters. Gateways LW3, LW5, and CC3 were not operational at the time, either due to maintenance or because they had not yet been deployed.
+
+Figure~\ref{fig:helikite_lw_rssi_map} shows the helikite’s position during the test and the locations of the active gateways. Since the platform remained in a relatively fixed location, the RSSI overlay appears as a dense cloud of measurements. The color distribution highlights strong signal levels throughout most of the area, which is expected given the unobstructed LOS to the Lake Wheeler gateways.
+
+Figures~\ref{fig:helikite_lw_rssi_all} and~\ref{fig:helikite_lw_snr_all} illustrate the RSSI and SNR distributions per gateway. LW1, LW2, and LW4 show broader distributions, likely due to small movements caused by wind drift during the flight. These variations still fall within a consistent range, suggesting minimal impact from multipath fading or terrain obstruction. CC2, being farther away and partially blocked by structures, received fewer packets and exhibits a narrower distribution centered around weaker signal levels.
+
+The optimized path loss parameters for this experiment are listed in Table~\ref{tab:helikite_lw_optimized_pathloss}. Field-deployed gateways like LW1, LW2, and LW4 yielded path loss exponents in the range of 2.5 to 2.8, aligning with typical values for open environments. CC2 recorded the lowest exponent ($n = 2.2$) and RMSE, reinforcing that the 300-meter elevation enabled a relatively clean LOS path even to more distant or partially obstructed receivers.
+
+Figure~\ref{fig:helikite_lw_pathloss_fit} plots the measured versus modeled path loss using the optimized Log-Distance Path Loss Model. Each subplot includes the measured path loss values (blue scatter points) and the model fit (red curve). The clustering of points around the model curve is tighter than in the car-based experiment, especially for LW1 and CC2, which reflects more stable conditions and minimal short-term variability in signal quality.
+
+Figure~\ref{fig:helikite_lw_rssi_distance_sf_all} shows RSSI plotted against 3D distance for each gateway, grouped by spreading factor (SF). Overall, RSSI values remain fairly stable across distance and SF, consistent with expectations for high-altitude LOS propagation. The use of higher SFs at longer distances, particularly for LW2 and LW4, confirms that ADR was actively adjusting transmission parameters in response to link quality.
+
+
+
+
+
+\subsubsection{North Campus}
+
+\textbf{Results and Analysis.} Figure~\ref{fig:helikite_nc_rssi_map} shows the helikite’s location during the experiment and the distribution of received RSSI values. The measurements were collected during the helikite deployment at North Campus. During this test, the platform hovered over a densely built urban area, where the majority of the packets were received by nearby gateways CC2 and CC3.
+
+Figures~\ref{fig:helikite_nc_rssi_all} and~\ref{fig:helikite_nc_snr_all} show the RSSI and SNR distributions per gateway. CC2 and CC3 received the most packets and display broad signal distributions, with consistently high values. On the other hand, LW1, LW2, and LW4—located farther from the test area—recorded fewer packets and show narrower distributions, centered around lower RSSI and SNR levels, likely due to increased distance and partial NLOS conditions.
+
+The optimized path loss model parameters are listed in Table~\ref{tab:helikite_nc_optimized_pathloss}. CC2 and CC3 exhibit low path loss exponents (around 2.0 and 2.2), which is consistent with their close proximity and mostly unobstructed LOS to the helikite. LW1 and LW2 required larger $d_0$ values during optimization, indicating higher initial loss and a more abrupt attenuation profile—likely a result of their distance and fewer recorded samples.
+
+The fitted curves in Figure~\ref{fig:helikite_nc_pathloss_fit} reflect these findings: the model follows the measured data closely for CC2 and CC3 but diverges more for the farther gateways due to sparse measurements. Figure~\ref{fig:helikite_nc_rssi_distance_sf_all} presents RSSI versus distance for each gateway, grouped by spreading factor (SF). As seen in other experiments, higher SFs appear more frequently at longer distances or under weaker signal conditions, showing that the ADR algorithm correctly adjusted transmission parameters during the experiment.
+
+
+\begin{figure}[t]
+    \centering
+    \foreach \gw in {LW1, LW2, LW4, CC2, CC3} {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Helikate/Packpalooza/Optimized_PathLoss/PathLoss_\gw.png}%
+            \label{fig:helikate_pp_pathloss_distance_\gw}%
+        }%
+        \hfill
+    }
+    \caption{Measured vs. Log-Distance Modeled Path Loss Across Gateways – Helikite Experiment (North Campus)}
+    \label{fig:helikite_nc_pathloss_fit}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\foreach \gw in {LW1, LW2, LW4, CC2, CC3} {%
+\subfloat[\gw]{%
+\includegraphics[width=0.48\linewidth]{Figures/Helikate/Packpalooza/RSSI_vs_Distance_Per_Gateway_SF/RSSI_SF_\gw.png}%
+\label{fig:helikate_pp_rssi_distance_sf_\gw}%
+}%
+\hfill
+}
+\caption{RSSI vs. Distance Across Gateways and Spreading Factors – Helikite Experiment (North Campus)}
+\label{fig:helikite_nc_rssi_distance_sf_all}
+\end{figure}
+
+\subsection{Drone-Based Experiment}
+
+The drone experiment offers a mobile aerial transmission scenario at a fixed altitude of approximately 50 meters. Unlike the helikite, which remained airborne for extended durations over a small area, the drone followed a pre-planned flight path over Lake Wheeler Field. This resulted in a shorter experiment duration and a lower number of received packets. The reduced sampling density offers a contrasting perspective on LoRaWAN performance under dynamic aerial movement. Due to the relatively low altitude and increased distance, no packets were received at the Centennial Campus gateways (CC2 and CC3).
+
+\textbf{Results and Analysis.} Figure~\ref{fig:drone_rssi_map} shows the drone’s trajectory and the recorded RSSI values across the flight. Stronger signals were observed near gateways LW1 and LW2, which were geographically closer and more visible along the flight path.
+
+Figures~\ref{fig:drone_rssi_all} and~\ref{fig:drone_snr_all} show the distribution of RSSI and SNR for each gateway. LW1 received the most consistent signals, while gateways like LW4 and LW5 show more dispersed or limited measurements, likely due to intermittent LOS or increased distance from the drone’s flight path. In particular, LW3 received very few packets, suggesting limited visibility or obstructed conditions during the brief periods when the drone was within range.
+
+Table~\ref{tab:drone_optimized_pathloss} summarizes the fitted path loss model parameters. The model produced variable results across gateways. For instance, LW1’s path loss exponent ($n = 0.5$) appears unrealistically low, likely due to the limited number of samples and short distances, which restrict the ability to observe signal degradation. In contrast, LW5 achieved low error metrics, consistent with a clear LOS path during parts of the flight.
+
+Figure~\ref{fig:drone_pathloss_fit} plots measured versus modeled path loss. As in previous experiments, blue points denote received measurements, and red curves indicate the optimized model fit. The larger spread of data points at some gateways (e.g., LW2 and LW4) illustrates increased variability in signal quality over a moving platform and limited sampling duration.
+
+Finally, Figure~\ref{fig:drone_rssi_distance_sf_all} presents RSSI as a function of distance for each gateway, categorized by spreading factor (SF). The expected trend of higher SFs appearing at longer distances is visible, supporting the operation of LoRaWAN’s ADR. However, the low number of data points per SF limits deeper interpretation compared to the helikite and car-based experiments.
+
+
+\begin{table}[t]
+  \centering
+  \caption{Optimized Path Loss Model Parameters – Drone Experiment (Lake Wheeler Field)}
+  \label{tab:drone_optimized_pathloss}
+  \csvreader[tabular=|c|c|c|c|c|,
+              table head=\hline Gateway & n & PL(d0) & MAE & RMSE \\\hline,
+              late after line=\\\hline]
+             {Figures/Drone/Optimized_PathLoss/Optimized_PathLoss_Results.csv}
+             {1=\gateway,2=\n,3=\PLd,4=\MAE,5=\RMSE}
+             {\gateway & \n & \PLd & \MAE & \RMSE}
+\end{table}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/Drone/RSSI MAP.png}
+    \caption{Drone Trajectory and Gateway Locations with RSSI Overlay – Drone Experiment (Lake Wheeler Field)}
+    \label{fig:drone_rssi_map}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \newcommand{\gwlist}{LW1, LW2, LW3, LW4, LW5, ALL} % List of gateways
+    
+    \foreach \gw [count=\i from 1] in \gwlist {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Drone/RSSI_Distributions/RSSI_\gw.png}%
+            \label{fig:rssi_drone\gw\i} % Unique label using counter
+        }%
+        \hfill
+    }
+    
+    \caption{RSSI Distribution Across Gateways – Drone Experiment (Lake Wheeler Field)}
+    \label{fig:drone_rssi_all}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \foreach \gw in {LW1, LW2, LW3, LW4, LW5, ALL} {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Drone/SNR_Distributions/SNR_\gw.png}%
+            \label{fig:snr_drone\gw}%
+        }%
+        \hfill
+    }
+    \caption{SNR Distribution Across Gateways – Drone Experiment (Lake Wheeler Field)}
+    \label{fig:drone_snr_all}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \foreach \gw in {LW1, LW2, LW3, LW4, LW5} {%
+        \subfloat[\gw]{%
+            \includegraphics[width=0.48\linewidth]{Figures/Drone/Optimized_PathLoss/PathLoss_\gw.png}%
+            \label{fig:drone_pathloss_distance_\gw}%
+        }%
+        \hfill
+    }
+    \caption{Measured vs. Log-Distance Modeled Path Loss Across Gateways – Drone Experiment (Lake Wheeler Field)}
+    \label{fig:drone_pathloss_fit}
+\end{figure}
+
+\begin{figure}[t]
+
+\centering
+\foreach \gw in {LW1, LW2, LW3, LW4, LW5} {%
+\subfloat[\gw]{%
+\includegraphics[width=0.48\linewidth]{Figures/Drone/RSSI_vs_Distance_Per_Gateway_SF/RSSI_SF_\gw.png}%
+\label{fig:drone_rssi_distance_sf_\gw}%
+}%
+\hfill
+}
+\caption{RSSI vs. Distance Across Gateways and Spreading Factors – Drone Experiment (Lake Wheeler Field)}
+\label{fig:drone_rssi_distance_sf_all}
+\end{figure}
+
+\section{Conclusion}\label{sec:conclusion}
+
+This paper evaluated the propagation performance of a LoRaWAN network deployed at NC State University's Centennial Campus and Lake Wheeler Field using three different measurement campaigns: a car-based ground experiment, a helikite-based aerial experiment, and a drone-based mobile aerial experiment. Each platform offered different insights into how LoRaWAN signals behave in realistic conditions, depending on factors like altitude, movement, and LOS.
+
+The helikite experiments, conducted at both Lake Wheeler and North Campus, recorded the highest number of received packets due to their longer duration and relatively fixed position. With the transmitter held at 300 meters, the link quality was consistently strong, especially for gateways with direct line-of-sight. The fitted models for these experiments had the lowest path loss exponents and error metrics, showing that high-altitude platforms can significantly reduce the effects of multipath and attenuation.
+
+In contrast, the drone experiment that flown at 50 meters, collected fewer packets and showed more variability. Although it offered mobility and flexibility, the lower altitude limited coverage to the nearby field area, and the model errors were generally higher. No packets were received by the Centennial Campus gateways during this flight, which was expected due to the combination of low altitude and distance.
+
+The car-based experiment covered both urban and rural segments, and helped capture the effects of buildings, trees, and changing terrain on signal quality. The results showed greater variation in path loss across gateways, with exponents ranging from 2.6 to 3.8. Gateways CC2 and CC3 received more packets overall, likely because the vehicle spent more time near them and maintained more line-of-sight segments in that part of the route.
+
+Across all experiments, we also observed that LoRaWAN's ADR feature worked as intended. Higher spreading factors were used at longer distances or under poorer link conditions, helping maintain connectivity even as RSSI dropped.
+
+In general, the results suggest that stable high-altitude transmitters—like the helikite—are the most effective for wide-area coverage and accurate path loss modeling. Meanwhile, ground and low-altitude mobile platforms provide a broader view of performance under dynamic conditions, which is useful for testing robustness in real deployments.
+
+These findings highlight the need for scenario-specific tuning when planning LoRaWAN networks in mixed environments, and support the use of empirical models that can be adjusted with real measurements. Future work could focus on expanding this methodology to other environments and integrating real-time tuning of parameters based on local conditions to further improve deployment strategies for LoRaWAN in urban, rural, and mobile applications.
+
+\bibliography{references}
+
+\end{document}
+
+
